@@ -41,16 +41,29 @@ export default function Contact() {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setResponse(null);
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResponse({ status: 200, message: data.message });
+        setFormState({ name: "", email: "", message: "" });
+      } else {
+        setResponse({ status: res.status, message: data.error || "Failed to send message." });
+      }
+    } catch (err) {
+      setResponse({ status: 500, message: "Network error. Please try again." });
+    } finally {
       setIsSubmitting(false);
-      setResponse({ status: 200, message: "Payload delivered successfully. Connection established." });
-      setFormState({ name: "", email: "", message: "" });
-    }, 1200);
+    }
   };
 
   if (!mounted) return null;
