@@ -1,0 +1,108 @@
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  font-family: var(--font-jetbrains-mono);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.explorerTitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+  font-weight: 600;
+}
+
+.fileBlock {
+  margin-bottom: 1.5rem;
+}
+
+.fileName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.fileName:hover {
+  background: var(--bg-surface-hover);
+}
+
+.icon {
+  color: var(--accent-yellow);
+}
+
+.pyIcon {
+  color: var(--accent-blue);
+}
+
+.sectionList {
+  list-style: none;
+  padding-left: 1.5rem;
+  margin-top: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  position: relative;
+}
+
+/* Tree line */
+.sectionList::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0.5rem;
+  left: 0.85rem;
+  width: 1px;
+  background-color: var(--border);
+}
+
+.sectionItem {
+  display: flex;
+  position: relative;
+}
+
+/* Tree branch */
+.sectionItem::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -0.65rem;
+  width: 0.5rem;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.sectionLink {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.sectionLink:hover {
+  color: var(--text-main);
+  background: var(--bg-surface-hover);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}
