@@ -12,7 +12,7 @@ export async function POST(request) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "Portfolio Contact <contact@anycompare.app>",
+      from: "Portfolio Contact <hello@anycompare.app>",
       to: ["venkatbalaji2004@gmail.com"],
       replyTo: email,
       subject: `[Portfolio] New message from ${name}`,
