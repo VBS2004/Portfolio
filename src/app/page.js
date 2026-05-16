@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 import { getProjectImages } from "./actions";
+import Script from "next/script";
 
 const GithubIcon = ({ size = 20 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -29,28 +30,38 @@ const projectsData = [
     link: "https://anycompare.app",
     func: "visit_site()",
     images: [],
-    ytVideo: "ZGwr2iiLwjk", // Demo YouTube ID
-    desc: "A powerful multi-agent search platform integrating Exa AI, DeepSeek and Reddit Signals. Built to autonomously cross-reference product metrics and synthesize accurate comparisons across the web, minimizing user friction."
-  },
-  {
-    title: "BirdCLEF 2026",
-    slug: "birdclef",
-    domain: "Audio ML",
-    tags: "EfficientNet, CBAM, PyTorch",
-    link: "https://www.kaggle.com/code/vbs2004",
-    func: "view_kernel()",
-    images: [],
-    desc: "Kaggle competition kernel leveraging EfficientNet with CBAM attention modules to classify bird calls from highly noisy environmental audio data. Placed in the top percentiles for the baseline phase."
+    ytVideo: "ZGwr2iiLwjk",
+    desc: "Multi-agent research platform using Exa AI and DeepSeek to aggregate, analyze, and compare products across the web. Architected an agent orchestration layer for parallel source retrieval; shipped Reddit sentiment analysis to surface community opinions alongside structured specs. Launched on Product Hunt."
   },
   {
     title: "BirdID",
     slug: "birdid",
     domain: "Full-Stack ML",
-    tags: "React, Flask, Redis",
+    tags: "PyTorch, EfficientNetB0, React, Flask, Redis",
     link: "https://github.com/VBS2004/BirdSoundIdentifier",
     func: "view_repo()",
     images: [],
-    desc: "A production-ready full-stack application that classifies bird species from user-uploaded audio. Utilizes a Redis task queue for asynchronous model inference and a responsive React frontend."
+    desc: "End-to-end bird species identification system: audio-to-mel spectrogram pipeline with PyTorch EfficientNetB0 classifier achieving 75% accuracy on the BirdCLEF+ dataset. Built a React frontend with a Flask REST API backend; integrated Redis caching for image URLs to optimize real-time prediction throughput."
+  },
+  {
+    title: "AI vs. Human Image Classifier",
+    slug: "aivshuman",
+    domain: "Computer Vision",
+    tags: "VAE, PyTorch, Data Augmentation",
+    link: "https://github.com/VBS2004",
+    func: "view_repo()",
+    images: [],
+    desc: "Variational Autoencoder-based classifier achieving 78% accuracy on diverse AI vs. human-generated image datasets, with a 12% performance improvement over the baseline. Mitigated overfitting via adaptive regularization and data augmentation strategies."
+  },
+  {
+    title: "CIBMTR Survival Prediction",
+    slug: "cibmtr",
+    domain: "Healthcare ML",
+    tags: "Neural Networks, XGBoost, LightGBM",
+    link: "https://www.kaggle.com/code/vbs2004/cibmtr-neural-network",
+    func: "view_solution()",
+    images: [],
+    desc: "Ranked top 150 globally out of 1,200+ participants in the CIBMTR healthcare ML challenge on Kaggle. Ensemble of neural networks + gradient boosting (XGBoost, LightGBM) with survival analysis objectives; handled class imbalance via PR-AUC optimization."
   },
   {
     title: "Custom RAG Pipeline",
@@ -60,17 +71,7 @@ const projectsData = [
     link: "https://github.com/VBS2004/RAG-LLM--Retrievel-from-google",
     func: "view_repo()",
     images: [],
-    desc: "An intelligent Retrieval-Augmented Generation pipeline. It uses Selenium for robust web scraping, FAISS for dense vector similarity, and BM25 for sparse retrieval, achieving highly accurate document grounding."
-  },
-  {
-    title: "CIBMTR Survival Prediction",
-    slug: "cibmtr",
-    domain: "Healthcare ML",
-    tags: "Neural Networks, XGBoost",
-    link: "https://www.kaggle.com/code/vbs2004/cibmtr-neural-network",
-    func: "view_solution()",
-    images: [],
-    desc: "A hybrid approach using deeply tuned Neural Networks and XGBoost ensembles to predict transplant survival rates. Focused heavily on handling class imbalance and missing clinical variables."
+    desc: "Selenium-based web scrapers feeding a FAISS vector store; improved retrieval accuracy by 45% over baseline keyword search with hybrid BM25 + dense retrieval reranking."
   }
 ];
 
@@ -156,36 +157,60 @@ export default function Portfolio() {
             <span className={styles.cellType}>Markdown</span>
           </div>
           <div className={styles.cellBody}>
-            <h1 className={styles.heroTitle}>Venkat Balaji S</h1>
-            <h2 className={styles.heroSubtitle}>Software Engineer & ML Researcher</h2>
-            <p className={styles.heroDesc}>
-              Building scalable ML infrastructure and intelligent backends. Specializing in PyTorch, GenAI workflows, and high-performance APIs.
-            </p>
+            <div className={styles.heroSplit}>
+              <div className={styles.heroMain}>
+                <h1 className={styles.heroTitle}>Venkat Balaji S</h1>
+                <h2 className={styles.heroSubtitle}>Software Engineer & ML Researcher</h2>
+                <p className={styles.heroDesc}>
+                  Building scalable ML infrastructure and intelligent backends. Specializing in PyTorch, GenAI workflows, and high-performance APIs.
+                </p>
 
-            <div className={styles.links}>
-              <button className={styles.actionBtn} onClick={() => window.location.href = '/contact'}>
-                <span className={styles.syntaxFunction}>initiate_contact</span>()
-              </button>
-              <a href="https://github.com/VBS2004" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
-                <GithubIcon /> GitHub
-              </a>
-              <a href="https://linkedin.com/in/venkat-balaji-s" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
-                <LinkedinIcon /> LinkedIn
-              </a>
-            </div>
+                <div className={styles.links}>
+                  <button className={styles.actionBtn} onClick={() => window.location.href = '/contact'}>
+                    <span className={styles.syntaxFunction}>initiate_contact</span>()
+                  </button>
+                  <a href="https://github.com/VBS2004" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
+                    <GithubIcon /> GitHub
+                  </a>
+                  <a href="https://linkedin.com/in/venkat-balaji-s" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
+                    <LinkedinIcon /> LinkedIn
+                  </a>
+                </div>
 
-            <div className={styles.heroMetrics}>
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>Expert</span>
-                <span className={styles.metricLabel}>Kaggle Notebooks</span>
+                <div className={styles.heroMetrics}>
+                  <div className={styles.metric}>
+                    <span className={styles.metricValue}>Expert</span>
+                    <span className={styles.metricLabel}>Kaggle Notebooks</span>
+                  </div>
+                  <div className={styles.metric}>
+                    <span className={styles.metricValue}>AWS</span>
+                    <span className={styles.metricLabel}>Solutions Architect</span>
+                  </div>
+                  <div className={styles.metric}>
+                    <span className={styles.metricValue}>9.47</span>
+                    <span className={styles.metricLabel}>CGPA at VIT</span>
+                  </div>
+                </div>
               </div>
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>AWS</span>
-                <span className={styles.metricLabel}>Solutions Architect</span>
-              </div>
-              <div className={styles.metric}>
-                <span className={styles.metricValue}>9.47</span>
-                <span className={styles.metricLabel}>CGPA at VIT</span>
+
+              {/* Live credential badges */}
+              <div className={styles.heroBadges}>
+                <div className={styles.credlyWrap}>
+                  <div
+                    data-iframe-width="150"
+                    data-iframe-height="270"
+                    data-share-badge-id="67d45d4b-6d3b-4d95-8a07-5127320d25fc"
+                    data-share-badge-host="https://www.credly.com"
+                  />
+                  <Script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js" />
+                </div>
+                <a href="https://www.kaggle.com/vbs2004" target="_blank" rel="noreferrer" className={styles.kaggleEntry}>
+                  <img src="/badges/kaggle.jpg" alt="Kaggle Expert" className={styles.kaggleAvatar} />
+                  <span className={styles.kaggleEntryText}>
+                    <span className={styles.kaggleEntryTitle}>Notebooks Expert</span>
+                    <span className={styles.kaggleEntrySub}>kaggle.com/vbs2004</span>
+                  </span>
+                </a>
               </div>
             </div>
           </div>
@@ -214,37 +239,35 @@ export default function Portfolio() {
           <div className={styles.arrayItem}>
             <div className={styles.arrayHeader}>
               <h3>IDFC FIRST Bank</h3>
-              <span className={styles.arrayDate}>Jan 2026 - Present</span>
+              <span className={styles.arrayDate}>Jan 2026 – Present</span>
             </div>
-            <div className={styles.arrayRole}>Application Engineer</div>
+            <div className={styles.arrayRole}>Application Engineer · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
-              <li>Developing scalable backend modules and microservices in an enterprise application development environment.</li>
-              <li>Focusing on RESTful service design, API performance optimization, and seamless system integration within high-availability architectures.</li>
-              <li>Collaborating with cross-functional teams to automate operational workflows and enhance existing CI/CD pipelines.</li>
-            </ul>
-          </div>
-          <div className={styles.arrayItem}>
-            <div className={styles.arrayHeader}>
-              <h3>Samsung R&D Institute</h3>
-              <span className={styles.arrayDate}>Sept 2024 - May 2025</span>
-            </div>
-            <div className={styles.arrayRole}>ML Research Intern (Samsung PRISM)</div>
-            <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
-              <li>Fine-tuned Mistral 7B with LoRA adapters for automated software development tasks, achieving a 42% reduction in syntactic and logical code error rates.</li>
-              <li>Engineered a proprietary dataset pipeline utilizing Gemini APIs to construct high-quality Spring Boot code-instruction pairs for model training.</li>
-              <li>Optimized PyTorch inference scripts and deployed quantized LLMs for local evaluation, significantly reducing memory footprint without sacrificing quality.</li>
+              <li>Developing backend modules in an enterprise application development bootcamp; working on RESTful service design and system integration within scalable architectures.</li>
             </ul>
           </div>
           <div className={styles.arrayItem}>
             <div className={styles.arrayHeader}>
               <h3>AlgoAnalytics</h3>
-              <span className={styles.arrayDate}>Apr 2025 - Aug 2025</span>
+              <span className={styles.arrayDate}>Apr 2025 – Aug 2025</span>
             </div>
-            <div className={styles.arrayRole}>Software Engineer (GenAI & ML)</div>
+            <div className={styles.arrayRole}>Software Engineer (GenAI & ML) · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
-              <li>Architected and maintained production-grade GenAI agents for the AlgoFabric platform, integrating LLM tool-use for complex task orchestration.</li>
-              <li>Developed specialized Machine Learning models using PyTorch to derive critical performance metrics and predictive insights from raw financial return data.</li>
-              <li>Containerized full-stack ML applications using Docker and orchestrated automated CI/CD deployment pipelines via GitHub Actions targeting AWS ECR.</li>
+              <li>Built and maintained production GenAI agents for AlgoFabric, a fintech platform providing trade insights and ticker analytics using LLMs and RAG pipelines.</li>
+              <li>Developed ML models to derive performance metrics from financial return data via APIs; deployed via Docker and GitHub Actions to AWS ECR.</li>
+              <li>Reduced model inference latency by optimizing preprocessing pipelines and caching layers.</li>
+            </ul>
+          </div>
+          <div className={styles.arrayItem}>
+            <div className={styles.arrayHeader}>
+              <h3>Samsung PRISM · Samsung R&D Institute Bangalore</h3>
+              <span className={styles.arrayDate}>Sept 2024 – May 2025</span>
+            </div>
+            <div className={styles.arrayRole}>ML Research Intern · Part-time</div>
+            <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+              <li>Fine-tuned Mistral 7B with LoRA for software development automation on a custom dataset, achieving <strong>42% reduction in code error rates</strong>.</li>
+              <li>Engineered a proprietary Spring Boot code dataset pipeline: structured prompt generation via Gemini + targeted GitHub repository mining for diverse real-world backend samples.</li>
+              <li>Curated 10,000+ instruction-response pairs across REST APIs, JPA repositories, and service layer patterns; dataset used for ongoing model evaluation at SRI-B.</li>
             </ul>
           </div>
         </div>
@@ -363,6 +386,76 @@ export default function Portfolio() {
           </div>
         </div>
       </div>
+
+      {/* Cell 4: Achievements */}
+      <div className={styles.cell} id="achievements">
+        <div className={styles.cellPrompt}>In [4]:</div>
+        <div className={styles.cellContent}>
+          <div className={styles.cellHeader}>
+            <span className={styles.cellType}>Python</span>
+          </div>
+          <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
+            <span className={styles.syntaxKeyword}>print</span>(<span className={styles.syntaxString}>"Achievements & Recognition"</span>)
+          </div>
+        </div>
+      </div>
+
+      {/* Output 4 */}
+      <div className={styles.cell}>
+        <div className={styles.cellPrompt} style={{ color: "var(--accent-red)" }}>Out[4]:</div>
+        <div className={styles.cellContent} style={{ background: "transparent", border: "none" }}>
+          <div className={styles.tableResponsive}>
+            <table className={styles.dataframe}>
+              <thead>
+                <tr>
+                  <th style={{ width: "4%" }}></th>
+                    <th style={{ width: "22%" }}>Result</th>
+                    <th>Event</th>
+                    <th style={{ width: "10%" }}>Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className={styles.dfIndex}>0</td>
+                    <td className={styles.dfName}>15th / 500+</td>
+                    <td>Zelestra × AWS ML Ascend Challenge (Phase 1)</td>
+                    <td>2025</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>1</td>
+                    <td className={styles.dfName}>Top 150 / 1,200+</td>
+                    <td>CIBMTR Healthcare ML Challenge, Kaggle</td>
+                    <td>2025</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>2</td>
+                    <td className={styles.dfName}>Expert</td>
+                    <td>Kaggle Notebooks (healthcare, audio, vision)</td>
+                    <td>active</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>3</td>
+                    <td className={styles.dfName}>2nd Place</td>
+                    <td>Binary Battles, Gravitas 2023, VIT (75 teams)</td>
+                    <td>2023</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>4</td>
+                    <td className={styles.dfName}>Certified</td>
+                    <td>AWS Solutions Architect – Associate (valid 2024–2027)</td>
+                    <td>2024</td>
+                  </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>5</td>
+                    <td className={styles.dfName}>Nanodegree</td>
+                    <td>Udacity Foundation of Generative AI</td>
+                    <td>2025</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
       <div className={styles.footerCell}>
         <div>Kernel Idle</div>

@@ -108,6 +108,28 @@
   line-height: 1.8;
 }
 
+/* Hero two-column split */
+.heroSplit {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+.heroMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.heroBadges {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+  align-items: flex-start;
+  width: 152px;
+  padding-top: 0.5rem;
+}
+
 .heroMetrics {
   display: flex;
   gap: 2rem;
@@ -289,6 +311,83 @@
 .footerLinks a:hover {
   color: var(--text-main);
 }
+
+/* ── Achievements Split Layout ───────────────────────────── */
+.achieveSplit {
+  display: flex;
+  gap: 2.5rem;
+  padding: 0.25rem 0;
+  align-items: flex-start;
+}
+
+.achieveBadges {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+  align-items: flex-start;
+  width: 152px;
+}
+
+.credlyWrap {
+  width: 150px;
+  flex-shrink: 0;
+}
+
+/* Kaggle entry: avatar + text, no card border */
+.kaggleEntry {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 150px;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.kaggleAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.kaggleEntry:hover .kaggleAvatar {
+  opacity: 1;
+}
+
+.kaggleEntryText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.kaggleEntryTitle {
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.72rem;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.kaggleEntry:hover .kaggleEntryTitle {
+  color: oklch(0.73 0.18 207);
+}
+
+.kaggleEntrySub {
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .tableResponsive {
   width: 100%;
