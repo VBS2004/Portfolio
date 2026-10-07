@@ -1,11 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./Sidebar.module.css";
 import { usePathname } from "next/navigation";
 
+const sections = [
+  { id: "intro", label: "Intro" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "achievements", label: "Achievements" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const [active, setActive] = useState("intro");
+
+  // Highlight the section currently being read, like a notebook's running cell
+  useEffect(() => {
+    if (pathname !== "/") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length) setActive(visible[0].target.id);
+      },
+      { rootMargin: "0px 0px -70% 0px" }
+    );
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [pathname]);
 
   return (
     <aside className={styles.sidebar}>
@@ -20,21 +48,20 @@ export default function Sidebar() {
           main.ipynb
         </Link>
         <ul className={styles.sectionList}>
-          <li className={styles.sectionItem}>
-            <Link href="/#intro" className={styles.sectionLink}># Intro</Link>
-          </li>
-          <li className={styles.sectionItem}>
-            <Link href="/#experience" className={styles.sectionLink}># Experience</Link>
-          </li>
-          <li className={styles.sectionItem}>
-            <Link href="/#projects" className={styles.sectionLink}># Projects</Link>
-          </li>
-          <li className={styles.sectionItem}>
-            <Link href="/#achievements" className={styles.sectionLink}># Achievements</Link>
-          </li>
-          <li className={styles.sectionItem}>
-            <Link href="/#skills" className={styles.sectionLink}># Skills</Link>
-          </li>
+          {sections.map(({ id, label }) => {
+            const isActive = pathname === "/" && active === id;
+            return (
+              <li key={id} className={styles.sectionItem}>
+                <Link
+                  href={`/#${id}`}
+                  className={`${styles.sectionLink} ${isActive ? styles.sectionActive : ""}`}
+                  aria-current={isActive ? "location" : undefined}
+                >
+                  # {label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

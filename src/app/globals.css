@@ -5,7 +5,12 @@
   --bg-surface-hover: #E9ECEF;
   
   --text-main: #212529;
-  --text-muted: #6C757D;
+  --text-muted: #5C6670;
+
+  /* One accent: Jupyter orange, darkened for contrast on light */
+  --accent: #B5520F;
+  --accent-soft: rgba(181, 82, 15, 0.08);
+  --on-accent: #FFFFFF;
   
   /* Syntax Accents */
   --accent-blue: #0366D6;
@@ -38,6 +43,11 @@
     
     --text-main: #E2E8F0;
     --text-muted: #94A3B8;
+
+    /* One accent: Jupyter orange */
+    --accent: #F59A55;
+    --accent-soft: rgba(245, 154, 85, 0.1);
+    --on-accent: #0F111A;
     
     /* Syntax Accents */
     --accent-blue: #38BDF8;
@@ -60,6 +70,11 @@
     
     --text-main: #E2E8F0;
     --text-muted: #94A3B8;
+
+    /* One accent: Jupyter orange */
+    --accent: #F59A55;
+    --accent-soft: rgba(245, 154, 85, 0.1);
+    --on-accent: #0F111A;
     
     /* Syntax Accents */
     --accent-blue: #38BDF8;
