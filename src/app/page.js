@@ -102,10 +102,7 @@ export default function Portfolio() {
   const [imageIndex, setImageIndex] = useState(0);
   const [theme, setTheme] = useState("dark"); // Or detect system pref
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     // Sync theme on mount
     const savedTheme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
     setTheme(savedTheme);
@@ -146,8 +143,6 @@ export default function Portfolio() {
     }
     return () => clearInterval(interval);
   }, [hoveredProject]);
-
-  if (!mounted) return null; // Avoid hydration mismatch
 
   return (
     <main className={styles.main}>
