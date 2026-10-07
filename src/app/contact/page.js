@@ -25,10 +25,7 @@ export default function Contact() {
   const [response, setResponse] = useState(null);
   
   const [theme, setTheme] = useState("dark");
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     const savedTheme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
@@ -65,8 +62,6 @@ export default function Contact() {
       setIsSubmitting(false);
     }
   };
-
-  if (!mounted) return null;
 
   return (
     <main className={mainStyles.main}>

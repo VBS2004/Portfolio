@@ -34,6 +34,49 @@ const projectsData = [
     desc: "Multi-agent research platform using Exa AI and DeepSeek to aggregate, analyze, and compare products across the web. Architected an agent orchestration layer for parallel source retrieval; shipped Reddit sentiment analysis to surface community opinions alongside structured specs. Launched on Product Hunt."
   },
   {
+    title: "ClipLabs",
+    slug: "cliplabs",
+    domain: "Video AI SaaS",
+    tags: "Modal (T4), FFmpeg NVENC, Railway, Cloudflare",
+    link: "https://cliplabs.pro",
+    func: "visit_site()",
+    images: [],
+    desc: "Co-founded short-form video repurposing SaaS: an automated long-form-to-short-form pipeline served from GPU workers (Modal, T4) with FFmpeg NVENC, a Railway backend and Cloudflare in front. Usage-based pricing and GPU cost modelling; iterated on real usage."
+  },
+  {
+    title: "jevcut",
+    slug: "jevcut",
+    domain: "LLM Evaluation",
+    tags: "ASR, LLM cascade, ffmpeg, pytest",
+    link: "https://github.com/VBS2004/jevcut",
+    func: "view_repo()",
+    images: [],
+    video: "/projects/jevcut/demo.mp4",
+    desc: "Auto-clipper that turns long video into ranked short clips (ASR → candidate cuts → LLM cascade → quality gate → ffmpeg). Built the evaluation harness first: 38 hand-labelled videos across 13 genres, two labelers, benchmarks tied to commit SHAs; beats five simpler baselines. Redesigned from measured failures, raising recall from 0.23 to 0.54 at roughly $0.03 per hour of video."
+  },
+  {
+    title: "jev-windows-agent",
+    slug: "jev-windows-agent",
+    domain: "Computer-Use Agents",
+    tags: "Windows UI Automation, arc-cua, OpenRouter",
+    link: "https://github.com/VBS2004/jev-windows-agent",
+    func: "view_repo()",
+    images: [],
+    video: "/projects/jev-windows-agent/demo.mp4",
+    desc: "Windows UI Automation backend for arc-cua: a planner hands off bounded desktop subtasks and a fast decision model drives the clicks from a structured view of the UI instead of screenshot-and-guess. In the demo it opens Apple Music and plays liked songs in 4 actions, with no frontier-model call in the loop."
+  },
+  {
+    title: "Jev plays Super Mario Bros",
+    slug: "jev-mario",
+    domain: "Game-Playing Agent",
+    tags: "NES RAM, typed decisions, emulator rollback",
+    link: "https://github.com/VBS2004/jev-plays-super-mario-bros",
+    func: "view_repo()",
+    images: [],
+    video: "/projects/jev-mario/demo.mp4",
+    desc: "Agent that clears Super Mario Bros by reading the NES's RAM, not its pixels: code turns memory into decision-shaped facts, a typed decision model picks each move, and a save-state rollback search verifies it. Cleared levels 1-1 to 1-4 and 2-1 for about $0.02 in model calls."
+  },
+  {
     title: "BirdID",
     slug: "birdid",
     domain: "Full-Stack ML",
@@ -78,23 +121,15 @@ const projectsData = [
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
   const [hoveredProject, setHoveredProject] = useState(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [openProject, setOpenProject] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
   const [theme, setTheme] = useState("dark"); // Or detect system pref
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     // Sync theme on mount
     const savedTheme = localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
-
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
 
     // Fetch images dynamically
     getProjectImages().then(imageMap => {
@@ -103,8 +138,6 @@ export default function Portfolio() {
         images: imageMap[p.slug] || []
       })));
     });
-
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const toggleTheme = () => {
@@ -114,20 +147,21 @@ export default function Portfolio() {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
+  // A row is open while hovered with a mouse, or after a click, tap or Enter on its title
+  const activeTitle = hoveredProject?.title ?? openProject;
+  const activeProject = projects.find(p => p.title === activeTitle);
+  const activeImageCount = activeProject?.images?.length ?? 0;
+
   useEffect(() => {
     let interval;
-    if (hoveredProject) {
-      setImageIndex(0);
-      if (hoveredProject.images && hoveredProject.images.length > 0) {
-        interval = setInterval(() => {
-          setImageIndex(prev => (prev + 1) % hoveredProject.images.length);
-        }, 1500);
-      }
+    setImageIndex(0);
+    if (activeImageCount > 0) {
+      interval = setInterval(() => {
+        setImageIndex(prev => (prev + 1) % activeImageCount);
+      }, 1500);
     }
     return () => clearInterval(interval);
-  }, [hoveredProject]);
-
-  if (!mounted) return null; // Avoid hydration mismatch
+  }, [activeTitle, activeImageCount]);
 
   return (
     <main className={styles.main}>
@@ -139,10 +173,7 @@ export default function Portfolio() {
           main.ipynb
         </div>
         <div className={styles.kernelStatus}>
-          <button
-            onClick={toggleTheme}
-            style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", borderRadius: "var(--radius-sm)", padding: "0.2rem 0.5rem", marginRight: "1rem", fontSize: "0.8rem", fontFamily: "var(--font-jetbrains-mono)" }}
-          >
+          <button type="button" onClick={toggleTheme} className={styles.themeToggle}>
             {theme === "dark" ? "Light Mode" : "Dark Mode"}
           </button>
           Python 3 (ipykernel) <div className={styles.statusDot}></div>
@@ -166,9 +197,9 @@ export default function Portfolio() {
                 </p>
 
                 <div className={styles.links}>
-                  <button className={styles.actionBtn} onClick={() => window.location.href = '/contact'}>
+                  <a href="/contact" className={styles.actionBtn}>
                     <span className={styles.syntaxFunction}>initiate_contact</span>()
-                  </button>
+                  </a>
                   <a href="https://github.com/VBS2004" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
                     <GithubIcon /> GitHub
                   </a>
@@ -187,7 +218,7 @@ export default function Portfolio() {
                     <span className={styles.metricLabel}>Solutions Architect</span>
                   </div>
                   <div className={styles.metric}>
-                    <span className={styles.metricValue}>9.47</span>
+                    <span className={styles.metricValue}>9.49</span>
                     <span className={styles.metricLabel}>CGPA at VIT</span>
                   </div>
                 </div>
@@ -243,6 +274,10 @@ export default function Portfolio() {
             </div>
             <div className={styles.arrayRole}>Application Engineer · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+              <li>Fine-tuned <strong>Qwen2.5-Coder-14B</strong> (LoRA + SFT) into a production code-generation model, from dataset design through GPU-constrained training and deployment, on a proprietary codebase that could not leave the environment.</li>
+              <li>Built the evaluation harness: a custom pipeline (tflint, terraform validate, checkov, CodeBLEU-HCL) that gates every model iteration on compile, lint, security and similarity metrics instead of manual review.</li>
+              <li>Built a hybrid-retrieval RAG pipeline (Jina v3, FAISS/Chroma, BM25 + dense, cross-encoder reranking); diagnosed and fixed a production retrieval defect that was silently degrading output quality.</li>
+              <li>Own ingestion and compliance reporting for an internal platform unifying EDR, MDM and CMDB data in a Neo4j graph model.</li>
               <li>Developing backend modules in an enterprise application development bootcamp; working on RESTful service design and system integration within scalable architectures.</li>
             </ul>
           </div>
@@ -254,6 +289,7 @@ export default function Portfolio() {
             <div className={styles.arrayRole}>Software Engineer (GenAI & ML) · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
               <li>Built and maintained production GenAI agents for AlgoFabric, a fintech platform providing trade insights and ticker analytics using LLMs and RAG pipelines.</li>
+              <li>Used <strong>LangGraph</strong> for intent routing in the stock-answering system, owning features from design to deployment.</li>
               <li>Developed ML models to derive performance metrics from financial return data via APIs; deployed via Docker and GitHub Actions to AWS ECR.</li>
               <li>Reduced model inference latency by optimizing preprocessing pipelines and caching layers.</li>
             </ul>
@@ -283,7 +319,7 @@ export default function Portfolio() {
           <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
             <span className={styles.syntaxKeyword}>import</span> pandas <span className={styles.syntaxKeyword}>as</span> pd<br />
             df_projects = pd.DataFrame(portfolio.projects)<br />
-            df_projects.head(5)
+            df_projects.head(9)
           </div>
         </div>
       </div>
@@ -293,7 +329,7 @@ export default function Portfolio() {
         <div className={styles.cellPrompt} style={{ color: "var(--accent-red)" }}>Out[3]:</div>
         <div className={styles.cellContent} style={{ background: "transparent", border: "none" }}>
           <div className={styles.tableResponsive}>
-            <table className={styles.dataframe}>
+            <table className={`${styles.dataframe} ${styles.dataframeWide}`}>
               <thead>
                 <tr>
                   <th style={{ width: "5%" }}></th>
@@ -307,19 +343,29 @@ export default function Portfolio() {
                 <tbody
                   key={idx}
                   id={`project-${idx}`}
-                  onMouseEnter={() => setHoveredProject(project)}
-                  onMouseLeave={() => setHoveredProject(null)}
+                  onPointerEnter={(e) => { if (e.pointerType === "mouse") setHoveredProject(project); }}
+                  onPointerLeave={(e) => { if (e.pointerType === "mouse") setHoveredProject(null); }}
                   style={{ cursor: "pointer" }}
                 >
                   <tr>
                     <td className={styles.dfIndex}>{idx}</td>
-                    <td className={styles.dfName}>{project.title}</td>
+                    <td className={styles.dfName}>
+                      <button
+                        type="button"
+                        className={styles.dfToggle}
+                        aria-expanded={activeTitle === project.title}
+                        aria-controls={`project-${idx}-details`}
+                        onClick={() => setOpenProject(openProject === project.title ? null : project.title)}
+                      >
+                        {project.title}
+                      </button>
+                    </td>
                     <td>{project.domain}</td>
                     <td className={styles.dfTags}>{project.tags}</td>
                     <td><a href={project.link} target="_blank" rel="noreferrer" className={styles.dfAction}>{project.func}</a></td>
                   </tr>
-                  {hoveredProject?.title === project.title && (
-                    <tr>
+                  {activeTitle === project.title && (
+                    <tr id={`project-${idx}-details`}>
                       <td colSpan={5} style={{ padding: 0 }}>
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
@@ -359,6 +405,20 @@ export default function Portfolio() {
                               </div>
                             )}
                             
+                            {project.video && (
+                              <div className={styles.expandedImageWrap}>
+                                <video
+                                  src={project.video}
+                                  autoPlay
+                                  muted
+                                  loop
+                                  playsInline
+                                  aria-label={`${project.title} demo`}
+                                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                                />
+                              </div>
+                            )}
+
                             {project.images && project.images.length > 0 && (
                               <div className={styles.expandedImageWrap}>
                                 <AnimatePresence>
@@ -451,11 +511,65 @@ export default function Portfolio() {
                     <td>Udacity Foundation of Generative AI</td>
                     <td>2025</td>
                   </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>6</td>
+                    <td className={styles.dfName}>Contributor</td>
+                    <td>Open source: vLLM, hermes-agent</td>
+                    <td>2026</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+
+      {/* Cell 5: Skills */}
+      <div className={styles.cell} id="skills">
+        <div className={styles.cellPrompt}>In [5]:</div>
+        <div className={styles.cellContent}>
+          <div className={styles.cellHeader}>
+            <span className={styles.cellType}>Python</span>
+          </div>
+          <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
+            skills.groupby(<span className={styles.syntaxString}>"category"</span>).agg(list)
+          </div>
+        </div>
+      </div>
+
+      {/* Output 5 */}
+      <div className={styles.cell}>
+        <div className={styles.cellPrompt} style={{ color: "var(--accent-red)" }}>Out[5]:</div>
+        <div className={styles.cellContent} style={{ background: "transparent", border: "none" }}>
+          <div className={styles.tableResponsive}>
+            <table className={styles.dataframe}>
+              <thead>
+                <tr>
+                  <th style={{ width: "22%" }}>Category</th>
+                  <th>Stack</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={styles.dfName}>LLMs & Agents</td>
+                  <td>LangChain, LangGraph, tool/function calling, structured outputs, RAG, hybrid retrieval, cross-encoder reranking, prompt and context engineering, evaluation harness design, benchmark versioning, LLM cost/latency budgeting, Vertex AI, Google ADK</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>ML</td>
+                  <td>PyTorch, TensorFlow, LoRA, QLoRA, SFT, PEFT, TRL, Unsloth, HuggingFace Transformers, survival analysis, scikit-learn, XGBoost, LightGBM</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>Engineering</td>
+                  <td>Python, SQL, Git, model deployment, REST APIs, Flask, Spring Boot, pytest, GitHub Actions CI/CD, Docker, Kubernetes, Terraform, Helm, AWS (S3, RDS, Lambda, ECR, EC2)</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>Data & Languages</td>
+                  <td>pandas, NumPy, PySpark, Neo4j, MySQL, Redis, Java, Go, Bash, C++, JavaScript</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <div className={styles.footerCell}>
         <div>Kernel Idle</div>

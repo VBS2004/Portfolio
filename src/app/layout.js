@@ -23,7 +23,15 @@ import Sidebar from "../components/Sidebar";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        {/* Apply the saved theme before first paint so the page never flashes the wrong colours */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");document.documentElement.setAttribute("data-theme",t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable}`}>
         <div style={{ display: "flex", minHeight: "100vh" }}>
           <Sidebar />

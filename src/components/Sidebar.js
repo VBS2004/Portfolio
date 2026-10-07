@@ -32,6 +32,9 @@ export default function Sidebar() {
           <li className={styles.sectionItem}>
             <Link href="/#achievements" className={styles.sectionLink}># Achievements</Link>
           </li>
+          <li className={styles.sectionItem}>
+            <Link href="/#skills" className={styles.sectionLink}># Skills</Link>
+          </li>
         </ul>
       </div>
 
