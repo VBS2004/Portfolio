@@ -98,7 +98,7 @@ const projectsData = [
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
   const [hoveredProject, setHoveredProject] = useState(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [openProject, setOpenProject] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
   const [theme, setTheme] = useState("dark"); // Or detect system pref
 
@@ -108,11 +108,6 @@ export default function Portfolio() {
     setTheme(savedTheme);
     document.documentElement.setAttribute("data-theme", savedTheme);
 
-    const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
     // Fetch images dynamically
     getProjectImages().then(imageMap => {
       setProjects(prev => prev.map(p => ({
@@ -120,8 +115,6 @@ export default function Portfolio() {
         images: imageMap[p.slug] || []
       })));
     });
-
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const toggleTheme = () => {
@@ -131,18 +124,21 @@ export default function Portfolio() {
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
+  // A row is open while hovered with a mouse, or after a click, tap or Enter on its title
+  const activeTitle = hoveredProject?.title ?? openProject;
+  const activeProject = projects.find(p => p.title === activeTitle);
+  const activeImageCount = activeProject?.images?.length ?? 0;
+
   useEffect(() => {
     let interval;
-    if (hoveredProject) {
-      setImageIndex(0);
-      if (hoveredProject.images && hoveredProject.images.length > 0) {
-        interval = setInterval(() => {
-          setImageIndex(prev => (prev + 1) % hoveredProject.images.length);
-        }, 1500);
-      }
+    setImageIndex(0);
+    if (activeImageCount > 0) {
+      interval = setInterval(() => {
+        setImageIndex(prev => (prev + 1) % activeImageCount);
+      }, 1500);
     }
     return () => clearInterval(interval);
-  }, [hoveredProject]);
+  }, [activeTitle, activeImageCount]);
 
   return (
     <main className={styles.main}>
@@ -154,10 +150,7 @@ export default function Portfolio() {
           main.ipynb
         </div>
         <div className={styles.kernelStatus}>
-          <button
-            onClick={toggleTheme}
-            style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-main)", cursor: "pointer", borderRadius: "var(--radius-sm)", padding: "0.2rem 0.5rem", marginRight: "1rem", fontSize: "0.8rem", fontFamily: "var(--font-jetbrains-mono)" }}
-          >
+          <button type="button" onClick={toggleTheme} className={styles.themeToggle}>
             {theme === "dark" ? "Light Mode" : "Dark Mode"}
           </button>
           Python 3 (ipykernel) <div className={styles.statusDot}></div>
@@ -181,9 +174,9 @@ export default function Portfolio() {
                 </p>
 
                 <div className={styles.links}>
-                  <button className={styles.actionBtn} onClick={() => window.location.href = '/contact'}>
+                  <a href="/contact" className={styles.actionBtn}>
                     <span className={styles.syntaxFunction}>initiate_contact</span>()
-                  </button>
+                  </a>
                   <a href="https://github.com/VBS2004" className={`${styles.actionBtn} ${styles.iconLink}`} target="_blank" rel="noreferrer">
                     <GithubIcon /> GitHub
                   </a>
@@ -313,7 +306,7 @@ export default function Portfolio() {
         <div className={styles.cellPrompt} style={{ color: "var(--accent-red)" }}>Out[3]:</div>
         <div className={styles.cellContent} style={{ background: "transparent", border: "none" }}>
           <div className={styles.tableResponsive}>
-            <table className={styles.dataframe}>
+            <table className={`${styles.dataframe} ${styles.dataframeWide}`}>
               <thead>
                 <tr>
                   <th style={{ width: "5%" }}></th>
@@ -327,19 +320,29 @@ export default function Portfolio() {
                 <tbody
                   key={idx}
                   id={`project-${idx}`}
-                  onMouseEnter={() => setHoveredProject(project)}
-                  onMouseLeave={() => setHoveredProject(null)}
+                  onPointerEnter={(e) => { if (e.pointerType === "mouse") setHoveredProject(project); }}
+                  onPointerLeave={(e) => { if (e.pointerType === "mouse") setHoveredProject(null); }}
                   style={{ cursor: "pointer" }}
                 >
                   <tr>
                     <td className={styles.dfIndex}>{idx}</td>
-                    <td className={styles.dfName}>{project.title}</td>
+                    <td className={styles.dfName}>
+                      <button
+                        type="button"
+                        className={styles.dfToggle}
+                        aria-expanded={activeTitle === project.title}
+                        aria-controls={`project-${idx}-details`}
+                        onClick={() => setOpenProject(openProject === project.title ? null : project.title)}
+                      >
+                        {project.title}
+                      </button>
+                    </td>
                     <td>{project.domain}</td>
                     <td className={styles.dfTags}>{project.tags}</td>
                     <td><a href={project.link} target="_blank" rel="noreferrer" className={styles.dfAction}>{project.func}</a></td>
                   </tr>
-                  {hoveredProject?.title === project.title && (
-                    <tr>
+                  {activeTitle === project.title && (
+                    <tr id={`project-${idx}-details`}>
                       <td colSpan={5} style={{ padding: 0 }}>
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
