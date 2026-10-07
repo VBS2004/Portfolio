@@ -34,6 +34,26 @@ const projectsData = [
     desc: "Multi-agent research platform using Exa AI and DeepSeek to aggregate, analyze, and compare products across the web. Architected an agent orchestration layer for parallel source retrieval; shipped Reddit sentiment analysis to surface community opinions alongside structured specs. Launched on Product Hunt."
   },
   {
+    title: "ClipLabs",
+    slug: "cliplabs",
+    domain: "Video AI SaaS",
+    tags: "Modal (T4), FFmpeg NVENC, Railway, Cloudflare",
+    link: "https://cliplabs.pro",
+    func: "visit_site()",
+    images: [],
+    desc: "Co-founded short-form video repurposing SaaS: an automated long-form-to-short-form pipeline served from GPU workers (Modal, T4) with FFmpeg NVENC, a Railway backend and Cloudflare in front. Usage-based pricing and GPU cost modelling; iterated on real usage."
+  },
+  {
+    title: "jevcut",
+    slug: "jevcut",
+    domain: "LLM Evaluation",
+    tags: "ASR, LLM cascade, ffmpeg, pytest",
+    link: "https://github.com/VBS2004/jevcut",
+    func: "view_repo()",
+    images: [],
+    desc: "Auto-clipper that turns long video into ranked short clips (ASR → candidate cuts → LLM cascade → quality gate → ffmpeg). Built the evaluation harness first: 38 hand-labelled videos across 13 genres, two labelers, benchmarks tied to commit SHAs; beats five simpler baselines. Redesigned from measured failures, raising recall from 0.23 to 0.54 at roughly $0.03 per hour of video."
+  },
+  {
     title: "BirdID",
     slug: "birdid",
     domain: "Full-Stack ML",
@@ -187,7 +207,7 @@ export default function Portfolio() {
                     <span className={styles.metricLabel}>Solutions Architect</span>
                   </div>
                   <div className={styles.metric}>
-                    <span className={styles.metricValue}>9.47</span>
+                    <span className={styles.metricValue}>9.49</span>
                     <span className={styles.metricLabel}>CGPA at VIT</span>
                   </div>
                 </div>
@@ -243,6 +263,10 @@ export default function Portfolio() {
             </div>
             <div className={styles.arrayRole}>Application Engineer · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
+              <li>Fine-tuned <strong>Qwen2.5-Coder-14B</strong> (LoRA + SFT) into a production code-generation model, from dataset design through GPU-constrained training and deployment, on a proprietary codebase that could not leave the environment.</li>
+              <li>Built the evaluation harness: a custom pipeline (tflint, terraform validate, checkov, CodeBLEU-HCL) that gates every model iteration on compile, lint, security and similarity metrics instead of manual review.</li>
+              <li>Built a hybrid-retrieval RAG pipeline (Jina v3, FAISS/Chroma, BM25 + dense, cross-encoder reranking); diagnosed and fixed a production retrieval defect that was silently degrading output quality.</li>
+              <li>Own ingestion and compliance reporting for an internal platform unifying EDR, MDM and CMDB data in a Neo4j graph model.</li>
               <li>Developing backend modules in an enterprise application development bootcamp; working on RESTful service design and system integration within scalable architectures.</li>
             </ul>
           </div>
@@ -254,6 +278,7 @@ export default function Portfolio() {
             <div className={styles.arrayRole}>Software Engineer (GenAI & ML) · Full-time</div>
             <ul className={styles.arrayDesc} style={{ paddingLeft: "1.5rem", marginTop: "0.5rem" }}>
               <li>Built and maintained production GenAI agents for AlgoFabric, a fintech platform providing trade insights and ticker analytics using LLMs and RAG pipelines.</li>
+              <li>Used <strong>LangGraph</strong> for intent routing in the stock-answering system, owning features from design to deployment.</li>
               <li>Developed ML models to derive performance metrics from financial return data via APIs; deployed via Docker and GitHub Actions to AWS ECR.</li>
               <li>Reduced model inference latency by optimizing preprocessing pipelines and caching layers.</li>
             </ul>
@@ -283,7 +308,7 @@ export default function Portfolio() {
           <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
             <span className={styles.syntaxKeyword}>import</span> pandas <span className={styles.syntaxKeyword}>as</span> pd<br />
             df_projects = pd.DataFrame(portfolio.projects)<br />
-            df_projects.head(5)
+            df_projects.head(7)
           </div>
         </div>
       </div>
@@ -451,11 +476,65 @@ export default function Portfolio() {
                     <td>Udacity Foundation of Generative AI</td>
                     <td>2025</td>
                   </tr>
+                  <tr>
+                    <td className={styles.dfIndex}>6</td>
+                    <td className={styles.dfName}>Contributor</td>
+                    <td>Open source: vLLM, hermes-agent</td>
+                    <td>2026</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+
+      {/* Cell 5: Skills */}
+      <div className={styles.cell} id="skills">
+        <div className={styles.cellPrompt}>In [5]:</div>
+        <div className={styles.cellContent}>
+          <div className={styles.cellHeader}>
+            <span className={styles.cellType}>Python</span>
+          </div>
+          <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
+            skills.groupby(<span className={styles.syntaxString}>"category"</span>).agg(list)
+          </div>
+        </div>
+      </div>
+
+      {/* Output 5 */}
+      <div className={styles.cell}>
+        <div className={styles.cellPrompt} style={{ color: "var(--accent-red)" }}>Out[5]:</div>
+        <div className={styles.cellContent} style={{ background: "transparent", border: "none" }}>
+          <div className={styles.tableResponsive}>
+            <table className={styles.dataframe}>
+              <thead>
+                <tr>
+                  <th style={{ width: "22%" }}>Category</th>
+                  <th>Stack</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={styles.dfName}>LLMs & Agents</td>
+                  <td>LangChain, LangGraph, tool/function calling, structured outputs, RAG, hybrid retrieval, cross-encoder reranking, prompt and context engineering, evaluation harness design, benchmark versioning, LLM cost/latency budgeting, Vertex AI, Google ADK</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>ML</td>
+                  <td>PyTorch, TensorFlow, LoRA, QLoRA, SFT, PEFT, TRL, Unsloth, HuggingFace Transformers, survival analysis, scikit-learn, XGBoost, LightGBM</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>Engineering</td>
+                  <td>Python, SQL, Git, model deployment, REST APIs, Flask, Spring Boot, pytest, GitHub Actions CI/CD, Docker, Kubernetes, Terraform, Helm, AWS (S3, RDS, Lambda, ECR, EC2)</td>
+                </tr>
+                <tr>
+                  <td className={styles.dfName}>Data & Languages</td>
+                  <td>pandas, NumPy, PySpark, Neo4j, MySQL, Redis, Java, Go, Bash, C++, JavaScript</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <div className={styles.footerCell}>
         <div>Kernel Idle</div>
