@@ -51,7 +51,30 @@ const projectsData = [
     link: "https://github.com/VBS2004/jevcut",
     func: "view_repo()",
     images: [],
+    video: "/projects/jevcut/demo.mp4",
     desc: "Auto-clipper that turns long video into ranked short clips (ASR → candidate cuts → LLM cascade → quality gate → ffmpeg). Built the evaluation harness first: 38 hand-labelled videos across 13 genres, two labelers, benchmarks tied to commit SHAs; beats five simpler baselines. Redesigned from measured failures, raising recall from 0.23 to 0.54 at roughly $0.03 per hour of video."
+  },
+  {
+    title: "jev-windows-agent",
+    slug: "jev-windows-agent",
+    domain: "Computer-Use Agents",
+    tags: "Windows UI Automation, arc-cua, OpenRouter",
+    link: "https://github.com/VBS2004/jev-windows-agent",
+    func: "view_repo()",
+    images: [],
+    video: "/projects/jev-windows-agent/demo.mp4",
+    desc: "Windows UI Automation backend for arc-cua: a planner hands off bounded desktop subtasks and a fast decision model drives the clicks from a structured view of the UI instead of screenshot-and-guess. In the demo it opens Apple Music and plays liked songs in 4 actions, with no frontier-model call in the loop."
+  },
+  {
+    title: "Jev plays Super Mario Bros",
+    slug: "jev-mario",
+    domain: "Game-Playing Agent",
+    tags: "NES RAM, typed decisions, emulator rollback",
+    link: "https://github.com/VBS2004/jev-plays-super-mario-bros",
+    func: "view_repo()",
+    images: [],
+    video: "/projects/jev-mario/demo.mp4",
+    desc: "Agent that clears Super Mario Bros by reading the NES's RAM, not its pixels: code turns memory into decision-shaped facts, a typed decision model picks each move, and a save-state rollback search verifies it. Cleared levels 1-1 to 1-4 and 2-1 for about $0.02 in model calls."
   },
   {
     title: "BirdID",
@@ -296,7 +319,7 @@ export default function Portfolio() {
           <div className={styles.cellBody} style={{ fontFamily: "var(--font-jetbrains-mono)", fontSize: "0.9rem" }}>
             <span className={styles.syntaxKeyword}>import</span> pandas <span className={styles.syntaxKeyword}>as</span> pd<br />
             df_projects = pd.DataFrame(portfolio.projects)<br />
-            df_projects.head(7)
+            df_projects.head(9)
           </div>
         </div>
       </div>
@@ -382,6 +405,20 @@ export default function Portfolio() {
                               </div>
                             )}
                             
+                            {project.video && (
+                              <div className={styles.expandedImageWrap}>
+                                <video
+                                  src={project.video}
+                                  autoPlay
+                                  muted
+                                  loop
+                                  playsInline
+                                  aria-label={`${project.title} demo`}
+                                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                                />
+                              </div>
+                            )}
+
                             {project.images && project.images.length > 0 && (
                               <div className={styles.expandedImageWrap}>
                                 <AnimatePresence>
